@@ -1,18 +1,63 @@
-grid = []
+grid = [];
+
+//Cell states
+const EMPTY = 0;
+const WIRE = 1;
+const HEAD = 2;
+const TAIL = 3;
+
+//For drawing
+var gridWidth = 20;
+var gridHeight = 20;
+
+var cellSize = 10;
+var stateColors =
+[
+    [EMPTY, [0, 0, 0]],
+    [WIRE, [255, 255, 0]],
+    [HEAD, [0, 0, 255]],
+    [TAIL, [255, 0, 0]]
+];
+
 
 function setup()
 {
-    createCanvas(500, 500);
-    grid = MakeArray(10, 10);
+    grid = MakeArray(gridWidth, gridHeight);
+    createCanvas(gridWidth * cellSize, gridHeight * cellSize);
 }
+
 
 function draw()
 {
-    background(220);
-
-    
+    DrawGrid();
 }
 
+
+function DrawGrid()
+{
+    background(220);
+
+    //Draw grid
+    for (var i = 0; i < grid.length; i++)
+    {
+        var column = grid[i];
+
+        for (var j = 0; j < column.length; j++)
+        {
+            var cell = column[j];
+
+            //Get correct color to draw cell
+            var stateColorPair = stateColors.find(pair => pair[0] == cell.state);
+            fill(stateColorPair[1]);
+
+            //Draw square
+            rect(i * cellSize, j * cellSize, cellSize, cellSize);
+        }
+    }
+}
+
+
+//Makes a grid of cells
 function MakeArray(w, h)
 {
     var newGrid = [];
@@ -23,11 +68,22 @@ function MakeArray(w, h)
 
         for (var j = 0; j < h; j++)
         {
-            tempGrid.push([]);
+            tempGrid.push(new Cell(EMPTY, EMPTY));
         }
 
         newGrid.push(tempGrid);
     }
 
     return newGrid;
+}
+
+
+class Cell
+{
+    constructor(state, nextState)
+    {
+        this.state = state;
+        this.nextState = nextState;
+        
+    }
 }
