@@ -45,7 +45,6 @@ function mousePressed()
     DrawGrid();
 }
 
-//Select cell type to place
 function keyPressed()
 {
     if (key == "1")
@@ -61,6 +60,8 @@ function keyPressed()
     {
         selectedCellType = TAIL;
     }
+
+    print(selectedCellType);
 }
 
 
