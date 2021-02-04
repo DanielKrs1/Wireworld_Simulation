@@ -76,14 +76,3 @@ function MakeArray(w, h)
 
     return newGrid;
 }
-
-
-class Cell
-{
-    constructor(state, nextState)
-    {
-        this.state = state;
-        this.nextState = nextState;
-        
-    }
-}
