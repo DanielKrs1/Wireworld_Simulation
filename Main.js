@@ -43,10 +43,8 @@ var selectedCellType = WIRE;
 
 function mousePressed()
 {
-    var x = round(mouseX / cellSize - 0.5);
-    var y = round(mouseY / cellSize - 0.5);
-    print(x, y);
-    grid[x][y].state = selectedCellType;
+    var cell = grid[round(mouseX / cellSize - 0.5)][round(mouseY / cellSize - 0.5)].state = selectedCellType;
+    cell.state = selectedCellType;
     DrawGrid();
 }
 
@@ -70,7 +68,6 @@ function keyPressed()
         print("Running: " + isRunning);
     }
 
-    //Step
     if (key == "x")
     {
         UpdateCells();
