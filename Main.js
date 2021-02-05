@@ -27,10 +27,15 @@ function setup()
     DrawGrid();
 }
 
+var isRunning = false;
 
 function draw()
 {
-    UpdateCells();
+    if (isRunning)
+    {
+        UpdateCells();
+    }
+
     DrawGrid();
 }
 
@@ -38,6 +43,11 @@ var selectedCellType = WIRE;
 
 function mousePressed()
 {
+    if (isRunning)
+    {
+        return;
+    }
+
     var x = round(mouseX / cellSize - 0.5);
     var y = round(mouseY / cellSize - 0.5);
     print(x, y);
@@ -59,9 +69,17 @@ function keyPressed()
     } else if (key == "4")
     {
         selectedCellType = TAIL;
+    } else if (key == " ")
+    {
+        isRunning = !isRunning;
+        print("Running: " + isRunning);
     }
 
-    print(selectedCellType);
+    //Step
+    if (key == "x")
+    {
+        UpdateCells();
+    }
 }
 
 
@@ -109,7 +127,7 @@ function MakeArray(w, h)
     return newGrid;
 }
 
-var directions = [[0, 1], [1, 1], [1, 0], [1, -1], [-1, 0], [-1, -1], [-1, 0], [-1, 1]];
+var directions = [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]];
 
 function UpdateCells()
 {
@@ -124,10 +142,10 @@ function UpdateCells()
                 cell.nextState = EMPTY;
             } else if (cell.state == HEAD)
             {
-                cell.nextstate = TAIL;
+                cell.nextState = TAIL;
             } else if (cell.state == TAIL)
             {
-                cell.nextstate = WIRE;
+                cell.nextState = WIRE;
             } else if (cell.state == WIRE)
             {
                 var neighboringHeads = 0;
@@ -144,13 +162,15 @@ function UpdateCells()
                         neighboringHeads++;
                     }
                 }
+
+                print("Neighbors: " + neighboringHeads);
                 
                 if (neighboringHeads > 0 && neighboringHeads < 3)
                 {
-                    cell.nextstate = HEAD;
+                    cell.nextState = HEAD;
                 } else
                 {
-                    cell.nextstate = WIRE;
+                    cell.nextState = WIRE;
                 }
             }
         }
@@ -164,6 +184,8 @@ function UpdateCells()
             cell.state = cell.nextState;
         }
     }
+
+    print(grid);
 }
 
 function IsOnBoard(x, y)
