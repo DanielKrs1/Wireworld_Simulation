@@ -43,11 +43,6 @@ var selectedCellType = WIRE;
 
 function mousePressed()
 {
-    if (isRunning)
-    {
-        return;
-    }
-
     var x = round(mouseX / cellSize - 0.5);
     var y = round(mouseY / cellSize - 0.5);
     print(x, y);
