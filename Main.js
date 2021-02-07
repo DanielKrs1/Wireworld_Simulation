@@ -7,16 +7,15 @@ const HEAD = 2;
 const TAIL = 3;
 
 //For drawing
-var gridWidth = 40;
-var gridHeight = 20;
+var gridWidth = 80;
+var gridHeight = 80;
 
 var cellSize = 20;
-var stateColors =
-{
-    EMPTY : [0, 0, 0],
-    WIRE : [255, 255, 0],
-    HEAD : [0, 0, 255],
-    TAIL : [255, 0, 0]
+var stateColors = {
+    0 : [0, 0, 0],
+    1 : [255, 255, 0],
+    2 : [0, 0, 255],
+    3 : [255, 0, 0]
 };
 
 
@@ -89,7 +88,6 @@ function DrawGrid()
         {
             var cell = column[j];
             var color = stateColors[cell.state];
-            print(color);
             fill(color[0], color[1], color[2]);
             rect(i * cellSize, j * cellSize, cellSize, cellSize);
         }
