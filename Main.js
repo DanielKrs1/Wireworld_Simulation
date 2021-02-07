@@ -7,17 +7,17 @@ const HEAD = 2;
 const TAIL = 3;
 
 //For drawing
-var gridWidth = 20;
+var gridWidth = 40;
 var gridHeight = 20;
 
 var cellSize = 20;
 var stateColors =
-[
-    [EMPTY, [0, 0, 0]],
-    [WIRE, [255, 255, 0]],
-    [HEAD, [0, 0, 255]],
-    [TAIL, [255, 0, 0]]
-];
+{
+    EMPTY : [0, 0, 0],
+    WIRE : [255, 255, 0],
+    HEAD : [0, 0, 255],
+    TAIL : [255, 0, 0]
+};
 
 
 function setup()
@@ -34,9 +34,8 @@ function draw()
     if (isRunning)
     {
         UpdateCells();
+        DrawGrid();
     }
-
-    DrawGrid();
 }
 
 var selectedCellType = WIRE;
@@ -47,6 +46,7 @@ function mousePressed()
     cell.state = selectedCellType;
     DrawGrid();
 }
+
 
 function keyPressed()
 {
@@ -71,6 +71,7 @@ function keyPressed()
     if (key == "x")
     {
         UpdateCells();
+        DrawGrid();
     }
 }
 
@@ -80,7 +81,6 @@ function DrawGrid()
     background(220);
     stroke(255);
 
-    //Draw grid
     for (var i = 0; i < grid.length; i++)
     {
         var column = grid[i];
@@ -88,12 +88,9 @@ function DrawGrid()
         for (var j = 0; j < column.length; j++)
         {
             var cell = column[j];
-
-            //Get correct color to draw cell
-            var stateColorPair = stateColors.find(pair => pair[0] == cell.state);
-            fill(stateColorPair[1]);
-
-            //Draw square
+            var color = stateColors[cell.state];
+            print(color);
+            fill(color[0], color[1], color[2]);
             rect(i * cellSize, j * cellSize, cellSize, cellSize);
         }
     }
@@ -176,9 +173,8 @@ function UpdateCells()
             cell.state = cell.nextState;
         }
     }
-
-    print(grid);
 }
+
 
 function IsOnBoard(x, y)
 {
