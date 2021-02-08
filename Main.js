@@ -7,8 +7,8 @@ const HEAD = 2;
 const TAIL = 3;
 
 //For drawing
-var gridWidth = 80;
-var gridHeight = 80;
+var gridWidth = 10;
+var gridHeight = 10;
 
 var cellSize = 20;
 var stateColors = {
@@ -24,6 +24,11 @@ function setup()
     grid = MakeArray(gridWidth, gridHeight);
     createCanvas(gridWidth * cellSize, gridHeight * cellSize);
     DrawGrid();
+
+    widthInput = createInput("5");
+    heightInput = createInput("5");
+    resizeButton = createButton("Resize");
+    resizeButton.mouseClicked(OnResizeGrid);
 }
 
 var isRunning = false;
@@ -37,12 +42,45 @@ function draw()
     }
 }
 
+function OnResizeGrid()
+{
+    var newWidth = parseInt(widthInput.value());
+    var newHeight = parseInt(heightInput.value());
+
+    if (isNaN(newWidth) || isNaN(newHeight))
+    {
+        return;
+    }
+
+    resizeCanvas(gridWidth * cellSize, gridHeight * cellSize);
+    ResizeGrid(newWidth, newHeight);
+    DrawGrid();
+}
+
+function ResizeGrid(newWidth, newHeight)
+{
+    gridWidth = newWidth;
+    gridHeight = newHeight;
+
+    /*
+    1. Find if you need to add or remove cells
+    2. Add/remove until the grid is the desired size
+    3. Same for y / height
+
+    Note: resize on x first
+    */
+}
+
 var selectedCellType = WIRE;
 
 function mousePressed()
 {
-    var cell = grid[round(mouseX / cellSize - 0.5)][round(mouseY / cellSize - 0.5)].state = selectedCellType;
-    cell.state = selectedCellType;
+    if (mouseX < 0 || mouseX >= width || mouseY < 0 || mouseY >= height)
+    {
+        return;
+    }
+
+    grid[round(mouseX / cellSize - 0.5)][round(mouseY / cellSize - 0.5)].state = selectedCellType;
     DrawGrid();
 }
 
