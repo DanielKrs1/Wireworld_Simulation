@@ -11,7 +11,8 @@ var gridWidth = 10;
 var gridHeight = 10;
 
 var cellSize = 20;
-var stateColors = {
+var stateColors =
+{
     0 : [0, 0, 0],
     1 : [255, 255, 0],
     2 : [0, 0, 255],
