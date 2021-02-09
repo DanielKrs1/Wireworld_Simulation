@@ -1,7 +1,5 @@
 # Wireworld_Simulation
 
-this is new stuff idk how to push
+An awesome Wieworld simulation
 
-a second change cuz why not
 
-new change

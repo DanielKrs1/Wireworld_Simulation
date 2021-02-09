@@ -21,6 +21,10 @@ var stateColors = {
 
 function setup()
 {
+    var p = [2, 2]
+    p.length = 3;
+    print(p);
+
     grid = MakeArray(gridWidth, gridHeight);
     createCanvas(gridWidth * cellSize, gridHeight * cellSize);
     DrawGrid();
@@ -52,23 +56,42 @@ function OnResizeGrid()
         return;
     }
 
-    resizeCanvas(gridWidth * cellSize, gridHeight * cellSize);
     ResizeGrid(newWidth, newHeight);
+    resizeCanvas(gridWidth * cellSize, gridHeight * cellSize);
     DrawGrid();
 }
 
 function ResizeGrid(newWidth, newHeight)
 {
+    //Resize all vertical arrays
+    for (var i = 0; i < grid.length; i++)
+    {
+        var xGrid = grid[i];
+        ResizeCellArray(xGrid, newHeight);
+    }
+
+    //Resize horizontal array
+    ResizeCellArray(grid, newWidth);
+
     gridWidth = newWidth;
     gridHeight = newHeight;
 
-    /*
-    1. Find if you need to add or remove cells
-    2. Add/remove until the grid is the desired size
-    3. Same for y / height
+    print("Grid resized!");
+    print(grid);
+}
 
-    Note: resize on x first
-    */
+function ResizeCellArray(arr, newLength)
+{
+    if (newLength > arr.length)
+    {
+        while (arr.length < newLength)
+        {
+            arr.push(new Cell(EMPTY, EMPTY));
+        }
+    } else
+    {
+        arr.length = newLength;
+    }
 }
 
 var selectedCellType = WIRE;
