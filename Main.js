@@ -19,24 +19,21 @@ var stateColors =
     3 : [255, 0, 0]
 };
 
+var selectedCellType = WIRE;
+var isRunning = false;
 
 function setup()
 {
-    var p = [2, 2]
-    p.length = 3;
-    print(p);
-
     grid = MakeArray(gridWidth, gridHeight);
     createCanvas(gridWidth * cellSize, gridHeight * cellSize);
     DrawGrid();
 
     widthInput = createInput("5");
     heightInput = createInput("5");
-    resizeButton = createButton("Resize");
-    resizeButton.mouseClicked(OnResizeGrid);
+    createButton("Resize").mouseClicked(OnResizeGrid);
+    createButton("Play/Pause").mouseClicked(OnTogglePlay);
+    createButton("Step").mouseClicked(OnStep);
 }
-
-var isRunning = false;
 
 function draw()
 {
@@ -49,10 +46,12 @@ function draw()
 
 function OnResizeGrid()
 {
+    isRunning = false;
+
     var newWidth = parseInt(widthInput.value());
     var newHeight = parseInt(heightInput.value());
 
-    if (isNaN(newWidth) || isNaN(newHeight))
+    if (isNaN(newWidth) || isNaN(newHeight) || newWidth < 1 || newHeight < 1)
     {
         return;
     }
@@ -64,38 +63,57 @@ function OnResizeGrid()
 
 function ResizeGrid(newWidth, newHeight)
 {
-    //Resize all vertical arrays
-    for (var i = 0; i < grid.length; i++)
+    //Resize grid on the x
+    if (newWidth > gridWidth)
     {
-        var xGrid = grid[i];
-        ResizeCellArray(xGrid, newHeight);
+        while (grid.length < newWidth)
+        {
+            var newColumn = Make1DCellArray(grid[0].length);
+            grid.push(newColumn);
+        }
+    } else
+    {
+        grid.length = newWidth;
     }
 
-    //Resize horizontal array
-    ResizeCellArray(grid, newWidth);
+    //Resize grid on the y (resize each array in same way)
+    if (newHeight > gridHeight)
+    {
+        for (var i = 0; i < grid.length; i++)
+        {
+            var gridColumn = grid[i];
+
+            while (gridColumn.length < newHeight)
+            {
+                gridColumn.push(new Cell(EMPTY, EMPTY));
+            }
+        }
+    } else
+    {
+        for (var i = 0; i < grid.length; i++)
+        {
+            var gridColumn = grid[i];
+            gridColumn.length = newHeight;
+        }
+    }
 
     gridWidth = newWidth;
     gridHeight = newHeight;
 
-    print("Grid resized!");
     print(grid);
 }
 
-function ResizeCellArray(arr, newLength)
+function Make1DCellArray(arrayLength)
 {
-    if (newLength > arr.length)
-    {
-        while (arr.length < newLength)
-        {
-            arr.push(new Cell(EMPTY, EMPTY));
-        }
-    } else
-    {
-        arr.length = newLength;
-    }
-}
+    var temp = [];
 
-var selectedCellType = WIRE;
+    for (var i = 0; i < arrayLength; i++)
+    {
+        temp.push(new Cell(EMPTY, EMPTY));
+    }
+
+    return temp;
+}
 
 function mousePressed()
 {
@@ -108,6 +126,16 @@ function mousePressed()
     DrawGrid();
 }
 
+function OnTogglePlay()
+{
+    isRunning = !isRunning;
+}
+
+function OnStep()
+{
+    UpdateCells();
+    DrawGrid();
+}
 
 function keyPressed()
 {
@@ -123,16 +151,6 @@ function keyPressed()
     } else if (key == "4")
     {
         selectedCellType = TAIL;
-    } else if (key == " ")
-    {
-        isRunning = !isRunning;
-        print("Running: " + isRunning);
-    }
-
-    if (key == "x")
-    {
-        UpdateCells();
-        DrawGrid();
     }
 }
 
@@ -234,7 +252,6 @@ function UpdateCells()
         }
     }
 }
-
 
 function IsOnBoard(x, y)
 {
