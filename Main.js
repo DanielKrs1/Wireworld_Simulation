@@ -26,6 +26,7 @@ var isRunning = false;
 
 function setup()
 {
+    
     grid = MakeArray(gridWidth, gridHeight);
     createCanvas(gridWidth * cellSize, gridHeight * cellSize);
     DrawGrid();
@@ -35,6 +36,10 @@ function setup()
     createButton("Resize").mouseClicked(OnResizeGrid);
     createButton("Play/Pause").mouseClicked(OnTogglePlay);
     createButton("Step").mouseClicked(OnStep);
+    
+    createButton("Save").mouseClicked(CreateSaveCode);
+    saveCodeText = createP();
+    saveCodeText.html((hex(15)));
     
     radioButton = createRadio();
     radioButton.option(EMPTY, "Empty");
@@ -106,7 +111,7 @@ function DrawGrid()
         }
     }
 }
-// Changes the cells to a new state depending on the variables around it
+// Changes the cells t  o a new state depending on the variables around it
 function UpdateCells()
 {
     for (var i = 0; i < gridWidth; i++)
@@ -275,6 +280,46 @@ function PrintRules()
     createP("4. Wires becomes heads if 1 or 2 neighbors are heads, otherwise they stay a wire.");
 }
 
+//Saving and loading
+
+function CreateSaveCode()
+{
+    var saveCode = "";
+    //Encode width and height
+    saveCode += gridWidth + ".";
+    saveCode += gridHeight + ".";
+
+    var gridCode = ""
+
+    for (let i = 0; i < gridWidth; i++)
+    {
+        for (let j = 0; j < gridHeight; j++)
+        {
+            gridCode += grid[i][j].state;
+        }
+    }
+
+    var hexGridCode = ""
+    var currentSet = "";
+
+    for (let i = 0; i < gridCode.length; i++)
+    {
+        currentSet += gridCode[i];
+
+        if (currentSet.length == 10)
+        {
+            hexGridCode += hex(parseInt(currentSet));
+            currentSet = "";
+        }
+    }
+
+    hexGridCode += hex(parseInt(currentSet));
+    saveCode += hexGridCode;
+
+    saveCodeText.html("Save Code: " + saveCode);
+}
+
+//Save idea
 
 
 /*
