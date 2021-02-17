@@ -319,10 +319,25 @@ function CreateSaveCode()
     saveCodeText.html("Save Code: " + saveCode);
 }
 
-//Save idea
-
-
 /*
+Save format idea: aaa.bbb.xy...
+
+aaa and bbb are the width and height
+x is the cell type, and y is how many of those cells follow
+
+potentially shorter, in worst case scenario it's about the same length
+
+ex.
+
+2222
+3002
+0002
+2220
+
+gets encoded as: 4.4.24310221032401 (new idea)
+
+instead of this: 4.4.2222300200022220 (original idea)
+
 Rules:
 1. Empty cell stays empty
 2. Head always becomes tail
