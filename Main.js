@@ -26,7 +26,6 @@ var isRunning = false;
 
 function setup()
 {
-    
     grid = MakeArray(gridWidth, gridHeight);
     createCanvas(gridWidth * cellSize, gridHeight * cellSize);
     DrawGrid();
