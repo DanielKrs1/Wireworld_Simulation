@@ -281,41 +281,45 @@ function PrintRules()
 
 //Saving and loading
 
+
 function CreateSaveCode()
 {
     var saveCode = "";
+
     //Encode width and height
     saveCode += gridWidth + ".";
     saveCode += gridHeight + ".";
 
-    var gridCode = ""
+    //Encode all cells
+    var consecutiveCells = 0;
+    var currentCellState = grid[0][0].state;
 
     for (let i = 0; i < gridWidth; i++)
     {
         for (let j = 0; j < gridHeight; j++)
         {
-            gridCode += grid[i][j].state;
+            var cell = grid[i][j];
+
+            if (cell.state == currentCellState)
+            {
+                consecutiveCells++;
+            } else
+            {
+                saveCode += GetCellsCode(currentCellState, consecutiveCells);
+
+                currentCellState = cell.state;
+                consecutiveCells = 1;
+            }
         }
     }
 
-    var hexGridCode = ""
-    var currentSet = "";
-
-    for (let i = 0; i < gridCode.length; i++)
-    {
-        currentSet += gridCode[i];
-
-        if (currentSet.length == 10)
-        {
-            hexGridCode += hex(parseInt(currentSet));
-            currentSet = "";
-        }
-    }
-
-    hexGridCode += hex(parseInt(currentSet));
-    saveCode += hexGridCode;
-
+    saveCode += GetCellsCode(currentCellState, consecutiveCells);
     saveCodeText.html("Save Code: " + saveCode);
+}
+
+function GetCellsCode(currentCellState, consecutiveCells)
+{
+    return currentCellState.toString() + consecutiveCells.toString() + ".";
 }
 
 /*
