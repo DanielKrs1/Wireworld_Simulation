@@ -45,6 +45,11 @@ function setup()
     radioButton.option(WIRE, "Wire");
     radioButton.option(HEAD, "Head");
     radioButton.option(TAIL, "Tail");
+    
+    createP("Load Grid: ");
+    loadInput = createInput();
+    createButton("Load").mouseClicked(LoadGridFromCode);
+    
     PrintRules();
 }
 
@@ -322,6 +327,65 @@ function GetCellsCode(currentCellState, consecutiveCells)
     return currentCellState.toString() + consecutiveCells.toString() + ".";
 }
 
+function LoadGridFromCode()
+{
+    var saveCode = loadInput.value();
+
+    //Set grid width and height
+    var newWidth = GetStringBeforePeriod(saveCode);
+    gridWidth = parseInt(newWidth);
+    saveCode = saveCode.replace(newWidth + ".", "");
+    print(saveCode);
+    var newHeight = GetStringBeforePeriod(saveCode);
+    gridHeight = parseInt(newHeight);
+    saveCode = saveCode.replace(newHeight + ".", "");
+
+    //Set Cells from remaining code
+    grid = MakeArray(gridWidth, gridHeight);
+
+    var currentCellData = GetStringBeforePeriod(saveCode);
+    saveCode = saveCode.replace(currentCellData + ".", "");
+    var currentCellType = parseInt(currentCellData[0]);
+    currentCellData = currentCellData.replace(currentCellType, "");
+    var cellsLeft = parseInt(currentCellData);
+
+    for (let i = 0; i < gridWidth; i++)
+    {
+        for (let j = 0; j < gridHeight; j++)
+        {
+            var cell = grid[i][j];
+
+            cell.state = currentCellType;
+            cellsLeft--;
+
+            if (cellsLeft == 0)
+            {
+                currentCellData = GetStringBeforePeriod(saveCode);
+                saveCode = saveCode.replace(currentCellData + ".", "");
+                currentCellType = parseInt(currentCellData[0]);
+                currentCellData = currentCellData.replace(currentCellType, "");
+                cellsLeft = parseInt(currentCellData);
+            }
+        }
+    }
+
+    DrawGrid();
+}
+
+function GetStringBeforePeriod(string)
+{
+    var i = 0;
+    var returnString = "";
+
+    while (string[i] != ".")
+    {
+        returnString += string[i];
+        i++;
+    }
+
+    return returnString;
+}
+
 /*
 Save format idea: aaa.bbb.xy...
 
@@ -337,7 +401,7 @@ ex.
 0002
 2220
 
-gets encoded as: 4.4.24310221032401 (new idea)
+gets encoded as: 4.4.24.31.02.21.03.24.01 (new idea)
 
 instead of this: 4.4.2222300200022220 (original idea)
 
