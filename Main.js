@@ -38,7 +38,6 @@ function setup()
     
     createButton("Save").mouseClicked(CreateSaveCode);
     saveCodeText = createP();
-    saveCodeText.html((hex(15)));
     
     radioButton = createRadio();
     radioButton.option(EMPTY, "Empty");
@@ -149,9 +148,7 @@ function UpdateCells()
                         neighboringHeads++;
                     }
                 }
-                
-                print("Neighbors: " + neighboringHeads);
-                
+
                 if (neighboringHeads > 0 && neighboringHeads < 3)
                 {
                     cell.nextState = HEAD;
@@ -286,7 +283,6 @@ function PrintRules()
 
 //Saving and loading
 
-
 function CreateSaveCode()
 {
     var saveCode = "";
@@ -329,85 +325,65 @@ function GetCellsCode(currentCellState, consecutiveCells)
 
 function LoadGridFromCode()
 {
-    var saveCode = loadInput.value();
-
-    //Set grid width and height
-    var newWidth = GetStringBeforePeriod(saveCode);
-    gridWidth = parseInt(newWidth);
-    saveCode = saveCode.replace(newWidth + ".", "");
+    var saveCode = new String(loadInput.value());
     print(saveCode);
-    var newHeight = GetStringBeforePeriod(saveCode);
-    gridHeight = parseInt(newHeight);
-    saveCode = saveCode.replace(newHeight + ".", "");
 
-    //Set Cells from remaining code
+    //Make correctly sized grid
+    var newWidth = new String("");
+    RemoveBeforePeriodAndSet(saveCode, newWidth);
+    gridWidth = parseInt(newWidth.value);
+    var newHeight = new String("");
+    RemoveBeforePeriodAndSet(saveCode, newHeight);
+    gridHeight = parseInt(newHeight.value);
     grid = MakeArray(gridWidth, gridHeight);
-
-    var currentCellData = GetStringBeforePeriod(saveCode);
-    saveCode = saveCode.replace(currentCellData + ".", "");
-    var currentCellType = parseInt(currentCellData[0]);
-    currentCellData = currentCellData.replace(currentCellType, "");
-    var cellsLeft = parseInt(currentCellData);
+    
+    //Set cells to correct states
+    var cellData = new String();
+    RemoveBeforePeriodAndSet(saveCode, cellData);
+    var currentType = parseInt(cellData.value[0]);
+    var cellsLeft = parseInt(cellData.value.slice(1, cellData.value.length));
 
     for (let i = 0; i < gridWidth; i++)
     {
         for (let j = 0; j < gridHeight; j++)
         {
             var cell = grid[i][j];
-
-            cell.state = currentCellType;
+            cell.state = currentType;
             cellsLeft--;
 
             if (cellsLeft == 0)
             {
-                currentCellData = GetStringBeforePeriod(saveCode);
-                saveCode = saveCode.replace(currentCellData + ".", "");
-                currentCellType = parseInt(currentCellData[0]);
-                currentCellData = currentCellData.replace(currentCellType, "");
-                cellsLeft = parseInt(currentCellData);
+                if (saveCode.length == 0)
+                {
+                    print("NO");
+                    end;
+                }
+
+                cellData.value = "";
+                RemoveBeforePeriodAndSet(saveCode, cellData);
+                var currentType = parseInt(cellData.value[0]);
+                var cellsLeft = parseInt(cellData.value.slice(1, cellData.value.length));
             }
         }
     }
 
+    end:
+    resizeCanvas(gridWidth * cellSize, gridHeight * cellSize);
     DrawGrid();
 }
 
-function GetStringBeforePeriod(string)
+function RemoveBeforePeriodAndSet(removeString, addString)
 {
-    var i = 0;
-    var returnString = "";
-
-    while (string[i] != ".")
-    {
-        returnString += string[i];
-        i++;
-    }
-
-    return returnString;
+    var periodIndex = removeString.value.indexOf(".");
+    addString.value = removeString.value.slice(0, periodIndex);
+    removeString.value = removeString.value.substring(periodIndex + 1, removeString.value.length);
 }
 
-/*
-Save format idea: aaa.bbb.xy...
-
-aaa and bbb are the width and height
-x is the cell type, and y is how many of those cells follow
-
-potentially shorter, in worst case scenario it's about the same length
-
-ex.
-
-2222
-3002
-0002
-2220
-
-gets encoded as: 4.4.24.31.02.21.03.24.01 (new idea)
-
-instead of this: 4.4.2222300200022220 (original idea)
-
-Rules:
-1. Empty cell stays empty
-2. Head always becomes tail
-3. Tail always becomes wire
-4. Wire becomes head if 1-2 neighbors are heads
-*/
+//Class for passing strings by reference
+class String
+{
+    constructor(val)
+    {
+        this.value = val;
+    }
+}
