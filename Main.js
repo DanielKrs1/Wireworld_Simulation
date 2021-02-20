@@ -95,7 +95,7 @@ function OnStep()
 
 
 //Grid Functions
-//Draws grid
+
 function DrawGrid()
 {
     background(220);
@@ -114,7 +114,7 @@ function DrawGrid()
         }
     }
 }
-// Changes the cells t  o a new state depending on the variables around it
+
 function UpdateCells()
 {
     for (var i = 0; i < gridWidth; i++)
@@ -169,7 +169,7 @@ function UpdateCells()
         }
     }
 }
-//Called when "Resize" button is clicked
+
 function OnResizeGrid()
 {
     isRunning = false;
@@ -186,7 +186,7 @@ function OnResizeGrid()
     resizeCanvas(gridWidth * cellSize, gridHeight * cellSize);
     DrawGrid();
 }
-//Resizes the Grid without making a new one
+
 function ResizeGrid(newWidth, newHeight)
 {
     //Resize grid on the x
@@ -379,7 +379,7 @@ function RemoveBeforePeriodAndSet(removeString, addString)
     removeString.value = removeString.value.substring(periodIndex + 1, removeString.value.length);
 }
 
-//Class for passing strings by reference
+//Class for passing strings by reference (don't bully me)
 class String
 {
     constructor(val)
