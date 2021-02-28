@@ -1,5 +1,5 @@
-# Wireworld_Simulation
+# Wireworld Simulation
 
-An awesome Wieworld simulation
+An in-browser simulation of the cellular automaton Wireworld
 
-
+# HI
