@@ -379,7 +379,7 @@ function RemoveBeforePeriodAndSet(removeString, addString)
     removeString.value = removeString.value.substring(periodIndex + 1, removeString.value.length);
 }
 
-//Class for passing strings by reference (don't bully me)
+//Class for passing strings by reference (Maybe not the best way but eh)
 class String
 {
     constructor(val)
